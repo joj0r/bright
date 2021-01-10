@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 int main( int argc, char *argv[])
 {
@@ -7,11 +8,11 @@ int main( int argc, char *argv[])
 	char *maxp = "/sys/class/backlight/intel_backlight/max_brightness";
 	int set;
 	int max;
-	const int MIN = 250;
-	const int INC = 250;
+	int min = 5;
+	float inc = 5;
 
 	//Check correct input
-	if( argc != 2)
+	if( argc > 2)
 	{
 		printf("Usage: backlight [options]\noptions:\n\ti - increase backlight\n\td - decrease backlight\n");
 		return 1;
@@ -37,20 +38,26 @@ int main( int argc, char *argv[])
 	// Read contens:
 	fscanf( setf, "%d", &set);
 
+	if( argc == 1)
+	{
+		printf("brightness: %d.\n", set);
+		return 0;
+	}
+
 	// Calculate new brightness value:
 	if( strcmp( argv[1], "i") == 0)
 	{
-		if( set < max - INC )
-			set+= INC;
+		if( set < max - round( max * ( inc / 100 )))
+			set+= round( max * ( inc / 100 ));
 		else
 			set = max;
 	}	
 	else if( strcmp( argv[1], "d") == 0)
 	{
-		if( set > MIN + INC )
-			set-= INC;
+		if( set > min + round( max * ( inc / 100 )))
+			set-= round( max * ( inc / 100 ));
 		else
-			set = MIN;
+			set = min;
 	}
 	fprintf( setf, "%d", set);
 	fclose( setf);	
