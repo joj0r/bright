@@ -54,10 +54,10 @@ int main( int argc, char *argv[])
 	}	
 	else if( strcmp( argv[1], "d") == 0)
 	{
-		if( set > min + round( max * ( inc / 100 )))
+		if( set > round( max * ( inc / 100 )) + round( max * ( inc / 100 )))
 			set-= round( max * ( inc / 100 ));
 		else
-			set = min;
+			set = round( max * ( inc / 100 ));
 	}
 	fprintf( setf, "%d", set);
 	fclose( setf);	
