@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
@@ -22,29 +23,76 @@ int main (int argc, char *argv[])
 
 // getopt - handling the arguments.
 	int c;
+	int dflag = 0;
+	int iflag = 0;
+	int vflag = 0;
+	int errflag = 0;
+	int value = 0;
+
 	opterr = 0;
 
-	while ((c = getopt (argc, argv, "di")) != -1)
+	while ((c = getopt (argc, argv, ":div:h")) != -1)
 		switch (c)
 		{
 			case 'd':
-				arg = 0;
-				readwrite (setp, 1);
-				return 0;
+				if (iflag > 0)
+					errflag++;
+				else
+					dflag++;
+				break;
 			case 'i':
-				arg = 1;
-				readwrite (setp, 1);
-				return 0;
-			default:
-				printf ("Usage: backlight [-i] [-d]\n\
+				if (dflag > 0)
+					errflag++;
+				else
+					iflag++;
+				break;
+			case 'v':
+				value = atoi(optarg);
+				break;
+			case 'h':
+				printf ("Usage: backlight [-i | -d] [-v value]  \n\
 options:\n\
 \t-i - increase backlight\n\
-\t-d - decrease backlight\n");
-				return 1;
+\t-d - decrease backlight\n\
+\t-v - gives the adjustment step a new value in percent (0-50)\n\
+\t-h - Show this message\n");
+				return 0;
+			case ':':
+				fprintf (stderr, "Option -%c requires a value\n", optopt);
+				break;
+			case '?':
+				fprintf (stderr, "Unreqognized option -%c.\n", optopt);
+				break;
 		}
 
-printf ("brightness: %d.\n", readwrite (setp, 0)); 
-return 0;
+	if (errflag)
+	{
+		printf ("errflag\n");
+		return 1;
+	}
+
+	if (value > 0 && value < 50)
+	{
+		inc = value;
+	}
+
+	if (dflag)
+	{
+		arg = 0;
+		readwrite (setp, 1);
+		return 0;
+	}
+	else if (iflag)
+	{
+		arg = 1;
+		readwrite (setp, 1);
+		return 0;
+	}
+	else
+	{
+		printf ("brightness: %d.\n", readwrite (setp, 0)); 
+		return 0;
+	}
 
 }
 
@@ -82,6 +130,12 @@ int calculate (int cur, char arg)
 	int max = readwrite (maxp, 0);
 	const int INC = round (max * (inc / 100));
 	const int MIN = round (max * (min / 100));
+
+	if (arg == -1)
+	{
+		printf("arg = -1");
+		return 1;
+	}
 
 	// Calculate new brightness value:
 	if (arg == 1)
