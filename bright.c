@@ -8,6 +8,7 @@
 
 int readwrite (char *path, int write);
 int calculate (int cur, char arg);
+void usage (void);
 
 //Global variables
 
@@ -23,6 +24,7 @@ int main (int argc, char *argv[])
 
 // getopt - handling the arguments.
 	int c;
+	int i = 0;
 	int dflag = 0;
 	int iflag = 0;
 	int vflag = 0;
@@ -47,15 +49,11 @@ int main (int argc, char *argv[])
 					iflag++;
 				break;
 			case 'v':
+				vflag++;
 				value = atoi(optarg);
 				break;
 			case 'h':
-				printf ("Usage: backlight [-i | -d] [-v value]  \n\
-options:\n\
-\t-i - increase backlight\n\
-\t-d - decrease backlight\n\
-\t-v - gives the adjustment step a new value in percent (0-50)\n\
-\t-h - Show this message\n");
+				usage();
 				return 0;
 			case ':':
 				fprintf (stderr, "Option -%c requires a value\n", optopt);
@@ -65,15 +63,29 @@ options:\n\
 				break;
 		}
 
+	for (i = optind; i < argc; i++)
+	{
+		printf ("Non-option argument %s\n", argv[i]);
+		usage();
+	}
+
 	if (errflag)
 	{
 		printf ("errflag\n");
 		return 1;
 	}
 
-	if (value > 0 && value < 50)
+	if (vflag)
 	{
-		inc = value;
+		if (value > 0 && value < 50)
+		{
+			inc = value;
+		}
+		else
+		{
+			printf ("Option -v requires an integer value between 0 and 50\n");
+			return 1;
+		}
 	}
 
 	if (dflag)
@@ -153,4 +165,16 @@ int calculate (int cur, char arg)
 			set = MIN;
 	}
 	return set;
+}
+
+void usage (void)
+{
+	printf ("Usage: bright [-i | -d] [-h] [-v <value>]  \n\
+options:\n\
+  -i\tincrease backlight\n\
+  -d\tdecrease backlight\n\
+  -v\tgives the adjustment step a new value in percent (0-50)\n\
+  -h\tshow this message\n\n\
+example: bright -iv 20 - increase brightness by a value of 20 percent.\n\
+if -v is not passed, default increment is 5 percent.\n\n");
 }
