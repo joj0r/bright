@@ -15,7 +15,7 @@ void usage (void);
 char *setp = "/sys/class/backlight/intel_backlight/brightness";
 char *maxp = "/sys/class/backlight/intel_backlight/max_brightness";
 int max;
-int min = 5;
+float min = 5;
 float inc = 5;
 int arg = -1;
 
@@ -59,19 +59,20 @@ int main (int argc, char *argv[])
 				fprintf (stderr, "Option -%c requires a value\n", optopt);
 				break;
 			case '?':
-				fprintf (stderr, "Unreqognized option -%c.\n", optopt);
-				break;
+				fprintf (stderr, "Unreqognized option -%c. Try 'bright -h' for help\n", optopt);
+				return 1;
 		}
 
 	for (i = optind; i < argc; i++)
 	{
 		printf ("Non-option argument %s\n", argv[i]);
 		usage();
+		return 1;
 	}
 
 	if (errflag)
 	{
-		printf ("errflag\n");
+		printf ("-i and -d can not be used at the same time\n");
 		return 1;
 	}
 
@@ -92,6 +93,7 @@ int main (int argc, char *argv[])
 	{
 		arg = 0;
 		readwrite (setp, 1);
+		printf ("brightness: %d.\n", readwrite (setp, 0)); 
 		return 0;
 	}
 	else if (iflag)
