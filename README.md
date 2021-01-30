@@ -3,7 +3,7 @@ A simple program to adjust brightness on linux computers using intel_backlight.
 
 The program adjusts the brightness in percentage steps, either default (5%) or chosen value (0-50%), manipulating the `sys/class/backlight/intel_backlight/brightness` file directly.
 
-The program is my final project in the Harvard course CS50x, and must be considered a basic program with basic functionality. I chose this problem for my final project to implement a brightness control on my Arch-distro running the Awesome WM, and I have created keyboard shortcuts in the rc.lua-file (the config-file of Awesome.)
+The program is my final project in the Harvard course [CS50x](https://cs50.harvard.edu/x/2021/), and must be considered a basic program with basic functionality. I chose this problem for my final project to implement a brightness control on my [Arch](https://archlinux.org/)-distro running the [Awesome WM](https://awesomewm.org/), and I have created keyboard shortcuts in the rc.lua-file (the config-file of Awesome.)
 
 ## Drawbacks
 I do not consider this program complete, even though it satisfies my current need on my computer. Here are some of the short commings of this program that I have recognized:
