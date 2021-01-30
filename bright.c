@@ -118,6 +118,7 @@ int main (int argc, char *argv[])
 	{
 		arg = 1;
 		readwrite (setp, 1);
+		printf ("brightness: %d.\n", readwrite (setp, 0)); 
 		return 0;
 	}
 	else
