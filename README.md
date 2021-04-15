@@ -1,6 +1,5 @@
 # bright
 A simple program to adjust brightness on linux computers using intel_backlight.
-#### Video demo: [https://youtu.be/DGUYH6JFrI0](https://youtu.be/DGUYH6JFrI0).
 
 The program adjusts the brightness in percentage steps, either default (5%) or chosen value (0-50%), manipulating the `sys/class/backlight/intel_backlight/brightness` file directly.
 
